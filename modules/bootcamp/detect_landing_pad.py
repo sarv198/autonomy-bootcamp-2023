@@ -39,11 +39,16 @@ def run(self, image: np.ndarray) -> "tuple[list[bounding_box.BoundingBox], np.nd
 
     for box in result.boxes:
         bounds = np.array(box.xyxy[0].tolist())  # [x1, y1, x2, y2]
-
+        print("Raw YOLO box:", bounds)
+        
         ok, bbox = bounding_box.BoundingBox.create(bounds)
+        print("BoundingBox.create result:", ok, bbox)
+        
         if ok:
             bounding_boxes.append(bbox)
 
+    print("Final bounding_boxes list:", bounding_boxes)
+            
     return bounding_boxes, image_annotated
 # ============
 # ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
