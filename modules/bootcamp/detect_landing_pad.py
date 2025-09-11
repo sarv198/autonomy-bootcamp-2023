@@ -16,6 +16,35 @@ from .. import bounding_box
 # ============
 # ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # ============
+def run(self, image: np.ndarray) -> "tuple[list[bounding_box.BoundingBox], np.ndarray]":
+    """
+    Converts an image into a list of bounding boxes.
+    """
+
+    # Run inference
+    results = self.__model.predict(
+        source=image,
+        conf=0.7,
+        device=self.__DEVICE,
+        verbose=False,
+    )
+
+    # Take the first result (one image at a time)
+    result = results[0]
+
+    # Annotated image (draws boxes + conf on original image)
+    image_annotated = result.plot()
+
+    bounding_boxes: list[bounding_box.BoundingBox] = []
+
+    for box in result.boxes:
+        bounds = np.array(box.xyxy[0].tolist())  # [x1, y1, x2, y2]
+
+        ok, bbox = bounding_box.BoundingBox.create(bounds)
+        if ok:
+            bounding_boxes.append(bbox)
+
+    return bounding_boxes, image_annotated
 # ============
 # ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
 # ============
